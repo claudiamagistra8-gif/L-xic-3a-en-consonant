@@ -1,0 +1,259 @@
+<!doctype html>
+<html lang="ca">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Arrels gregues · Activitat 7</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=GFS+Didot&family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&display=swap">
+<style>
+/* Layout: una sola columna centrada; targeta de joc amb dos passos (arrel grega → definició) */
+:root{
+  --bg:#eef1f4; --surface:#ffffff; --ink:#1b2430; --muted:#5b6675; --line:#d5dbe3;
+  --aegean:#1f4e79; --aegean-soft:#e3ecf5; --ochre:#b7791f;
+  --ok:#2f7d4f; --ok-soft:#e2f2e8; --bad:#b03a2e; --bad-soft:#f8e4e1;
+  --f-greek:"GFS Didot","Noto Serif","Times New Roman",serif;
+  --f-body:"Atkinson Hyperlegible",system-ui,-apple-system,"Segoe UI",sans-serif;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#121821; --surface:#1a222e; --ink:#e7ecf2; --muted:#9aa6b5; --line:#2d3846;
+  --aegean:#7fb2e5; --aegean-soft:#1e2e42; --ochre:#e0a84a;
+  --ok:#6cc68f; --ok-soft:#18321f; --bad:#ef8a7e; --bad-soft:#3a1d1a; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#121821; --surface:#1a222e; --ink:#e7ecf2; --muted:#9aa6b5; --line:#2d3846;
+  --aegean:#7fb2e5; --aegean-soft:#1e2e42; --ochre:#e0a84a;
+  --ok:#6cc68f; --ok-soft:#18321f; --bad:#ef8a7e; --bad-soft:#3a1d1a; color-scheme:dark}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:16px;line-height:1.5;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:24px 48px}
+.wrap{max-width:760px;margin:0 auto;display:flex;flex-direction:column;gap:20px}
+header{display:flex;flex-direction:column;gap:6px}
+.eyebrow{font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);font-weight:700}
+h1{font-family:var(--f-greek);font-weight:400;font-size:clamp(30px,6vw,42px);line-height:1.1;margin:0;text-wrap:balance}
+h1 .gr{color:var(--aegean)}
+.lead{margin:0;color:var(--muted);max-width:60ch}
+.meander{height:10px;background:
+  linear-gradient(90deg,var(--aegean) 0 2px,transparent 2px) 0 0/20px 10px,
+  linear-gradient(var(--aegean) 0 2px,transparent 2px) 0 0/20px 10px;opacity:.35;border-radius:2px}
+nav{display:flex;gap:6px;flex-wrap:wrap;border-bottom:1px solid var(--line)}
+nav button{font:inherit;font-weight:700;background:none;border:0;border-bottom:3px solid transparent;padding:10px 12px;color:var(--muted);cursor:pointer}
+nav button[aria-selected="true"]{color:var(--aegean);border-color:var(--aegean)}
+button:focus-visible{outline:3px solid var(--ochre);outline-offset:2px}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:22px;display:flex;flex-direction:column;gap:18px}
+.progress{display:flex;align-items:center;gap:12px;font-size:14px;color:var(--muted);font-variant-numeric:tabular-nums}
+.bar{flex:1;height:6px;background:var(--line);border-radius:3px;overflow:hidden}
+.bar i{display:block;height:100%;background:var(--aegean);width:0;transition:width .3s}
+.score{font-weight:700;color:var(--ink)}
+.word{font-family:var(--f-greek);font-size:clamp(34px,8vw,52px);line-height:1;text-align:center;margin:6px 0 0}
+.step-label{font-weight:700;font-size:15px;display:flex;gap:8px;align-items:baseline}
+.step-label span{font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:var(--ochre)}
+.nouns{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:8px}
+.noun,.def{font:inherit;color:var(--ink);background:var(--surface);border:1.5px solid var(--line);border-radius:10px;padding:9px 12px;text-align:left;cursor:pointer;transition:border-color .15s,background .15s}
+.noun:hover:not(:disabled),.def:hover:not(:disabled){border-color:var(--aegean)}
+.noun .g{font-family:var(--f-greek);font-size:19px;display:block;line-height:1.2}
+.noun .t{font-size:13px;color:var(--muted)}
+.hide-gloss .noun .t{display:none}
+.defs{display:flex;flex-direction:column;gap:8px}
+.def{padding:12px 14px}
+.is-ok{border-color:var(--ok)!important;background:var(--ok-soft)!important}
+.is-bad{border-color:var(--bad)!important;background:var(--bad-soft)!important;opacity:.8}
+button:disabled{cursor:default}
+.feedback{border-left:4px solid var(--aegean);background:var(--aegean-soft);padding:12px 14px;border-radius:0 10px 10px 0;font-size:15px}
+.feedback b{font-family:var(--f-greek);font-size:18px;font-weight:400}
+.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center;justify-content:space-between}
+.btn{font:inherit;font-weight:700;border-radius:999px;padding:10px 20px;cursor:pointer;border:1.5px solid var(--aegean);background:var(--aegean);color:var(--surface)}
+.btn.ghost{background:transparent;color:var(--aegean)}
+.toggle{display:flex;gap:8px;align-items:center;font-size:14px;color:var(--muted);cursor:pointer}
+.toggle input{width:18px;height:18px;accent-color:var(--aegean)}
+.summary{text-align:center;display:flex;flex-direction:column;gap:12px;align-items:center}
+.big{font-family:var(--f-greek);font-size:64px;line-height:1;color:var(--aegean);font-variant-numeric:tabular-nums}
+.missed{display:flex;flex-wrap:wrap;gap:6px;justify-content:center}
+.chip{font-size:14px;border:1px solid var(--bad);color:var(--bad);border-radius:999px;padding:3px 10px}
+.tablewrap{overflow-x:auto;background:var(--surface);border:1px solid var(--line);border-radius:14px}
+table{border-collapse:collapse;width:100%;min-width:560px;font-size:15px}
+th,td{padding:10px 14px;text-align:left;vertical-align:top;border-bottom:1px solid var(--line)}
+th{font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+tr:last-child td{border-bottom:0}
+td.gr{font-family:var(--f-greek);font-size:18px;white-space:nowrap}
+td.w{font-weight:700}
+.reveal td.d{filter:blur(5px);cursor:pointer;transition:filter .2s}
+.reveal td.d.shown{filter:none}
+.lex{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:10px}
+.lex div{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:12px 14px}
+.lex .g{font-family:var(--f-greek);font-size:22px}
+.lex .t{color:var(--muted);font-size:14px}
+.lex .ex{font-size:13px;margin-top:6px;color:var(--aegean)}
+.note{font-size:14px;color:var(--muted)}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+
+<div class="wrap">
+  <header>
+    <div class="eyebrow">Grec I · Unitat 4 · Morfologia i lèxic</div>
+    <h1>Paraules amb arrel <span class="gr">ἑλληνική</span></h1>
+    <p class="lead">Activitat 7. Relaciona cada paraula amb el substantiu grec del qual prové i tria'n la definició correcta.</p>
+    <div class="meander" aria-hidden="true"></div>
+  </header>
+
+  <nav role="tablist">
+    <button role="tab" id="tab-joc" aria-selected="true" data-view="joc">Joc</button>
+    <button role="tab" id="tab-lexic" aria-selected="false" data-view="lexic">Lèxic grec</button>
+    <button role="tab" id="tab-sol" aria-selected="false" data-view="sol">Solucionari</button>
+  </nav>
+
+  <section id="view-joc">
+    <div class="card" id="game"></div>
+  </section>
+
+  <section id="view-lexic" hidden>
+    <p class="note">Els substantius de la unitat i les paraules del valencià que en deriven.</p>
+    <div class="lex" id="lex"></div>
+  </section>
+
+  <section id="view-sol" hidden>
+    <div class="row" style="margin-bottom:10px">
+      <p class="note" style="margin:0">Toca una definició per mostrar-la.</p>
+      <label class="toggle"><input type="checkbox" id="showAll"> Mostra-les totes</label>
+    </div>
+    <div class="tablewrap"><table class="reveal" id="sol"></table></div>
+  </section>
+</div>
+
+<script>
+const NOUNS = {
+  tyr:{g:"τύραννος, -ου",t:"tirà"},
+  orn:{g:"ὄρνις, ὄρνιθος",t:"ocell"},
+  alo:{g:"ἀλώπηξ, -εκος",t:"guineu"},
+  pat:{g:"πατρίς, -ίδος",t:"pàtria"},
+  sar:{g:"σάρξ, σαρκός",t:"carn"},
+  nyx:{g:"νύξ, νυκτός",t:"nit"},
+  thr:{g:"θρίξ, τριχός",t:"cabell, pèl"},
+  pra:{g:"πρᾶγμα, -ατος",t:"fet, afer"},
+  prx:{g:"πρᾶξις, -εως",t:"acció, pràctica"},
+  hai:{g:"αἷμα, -ατος",t:"sang"},
+  sto:{g:"στόμα, -ατος",t:"boca"},
+  som:{g:"σῶμα, -ατος",t:"cos"},
+  chr:{g:"χρῆμα, -ατος",t:"cosa; pl. diners"},
+  cha:{g:"χάρις, -ιτος",t:"gràcia, favor"},
+  ono:{g:"ὄνομα, -ατος",t:"nom"},
+  ops:{g:"ὤψ, ὠπός",t:"ull, vista"},
+  chm:{g:"χρῶμα, -ατος",t:"color"}
+};
+const WORDS = [
+ {w:"tiranicidi",n:["tyr"],e:"τύραννος + llatí -cidium (de caedere, ‘matar’)",d:"Assassinat d'un tirà."},
+ {w:"ornitologia",n:["orn"],e:"ὄρνις, ὄρνιθος + λόγος ‘estudi’",d:"Ciència que estudia els ocells."},
+ {w:"alopècia",n:["alo"],e:"ἀλωπεκία, de ἀλώπηξ: la guineu perd el pèl quan muda",d:"Caiguda o pèrdua del cabell."},
+ {w:"apàtrida",n:["pat"],e:"ἀ- privativa + πατρίς, -ίδος",d:"Persona que no té pàtria ni nacionalitat reconeguda."},
+ {w:"sarcoma",n:["sar"],e:"σάρξ, σαρκός + -ωμα ‘tumor’",d:"Tumor maligne del teixit connectiu."},
+ {w:"nictàlop",n:["nyx","ops"],e:"νύξ, νυκτός + ἀλαός ‘cec’ + ὤψ ‘ull’",d:"Que hi veu millor amb poca llum que de dia."},
+ {w:"tricofàgia",n:["thr"],e:"θρίξ, τριχός + φαγεῖν ‘menjar’",d:"Hàbit compulsiu de menjar-se els cabells."},
+ {w:"pragmatisme",n:["pra","prx"],e:"πρᾶγμα, -ατος ‘fet, acció’",d:"Actitud de qui valora les coses sobretot per la seua utilitat pràctica."},
+ {w:"hemofília",n:["hai"],e:"αἷμα, -ατος + φιλία ‘tendència’",d:"Malaltia hereditària en què la sang no coagula bé."},
+ {w:"estomatitis",n:["sto"],e:"στόμα, -ατος + -ῖτις ‘inflamació’",d:"Inflamació de la mucosa de la boca."},
+ {w:"somatitzar",n:["som"],e:"σῶμα, -ατος ‘cos’",d:"Transformar un malestar psíquic en símptomes físics."},
+ {w:"crematística",n:["chr"],e:"χρῆμα, -ατος; en plural, χρήματα ‘diners’",d:"Estudi de la producció i distribució de la riquesa; allò relatiu als diners."},
+ {w:"hematologia",n:["hai"],e:"αἷμα, -ατος + λόγος",d:"Branca de la medicina que estudia la sang i les seues malalties."},
+ {w:"eucaristia",n:["cha"],e:"εὖ ‘bé’ + χάρις, -ιτος",d:"Sagrament cristià; etimològicament, «acció de gràcies»."},
+ {w:"sinonímia",n:["ono"],e:"σύν ‘amb’ + ὄνομα (forma eòlica ὄνυμα)",d:"Relació entre paraules que tenen el mateix significat o un de molt semblant."},
+ {w:"ornitorinc",n:["orn"],e:"ὄρνις, ὄρνιθος + ῥύγχος ‘bec, musell’",d:"Mamífer d'Austràlia que pon ous i té un bec com el d'un ànec."},
+ {w:"sarcòfag",n:["sar"],e:"σάρξ, σαρκός + φαγεῖν: «que menja carn»",d:"Sepulcre de pedra on es col·loca un cadàver."},
+ {w:"carisma",n:["cha"],e:"χάρισμα ‘do, favor’, de χάρις",d:"Capacitat especial d'una persona per a atraure i convéncer els altres."},
+ {w:"ciclopi",n:["ops"],e:"κύκλωψ: κύκλος ‘cercle’ + ὤψ ‘ull’",d:"Enorme, gegantí, com les construccions atribuïdes als cíclops."},
+ {w:"antonomàsia",n:["ono"],e:"ἀντί ‘en lloc de’ + ὄνομα",d:"Figura que substitueix un nom propi per un epítet o un nom comú, o a l'inrevés."},
+ {w:"cromosoma",n:["chm","som"],e:"χρῶμα + σῶμα: «cos que es tenyeix»",d:"Estructura del nucli de la cèl·lula que conté la informació genètica."},
+ {w:"hemopatia",n:["hai"],e:"αἷμα, -ατος + πάθος ‘malaltia’",d:"Qualsevol malaltia de la sang."},
+ {w:"praxi",n:["prx","pra"],e:"πρᾶξις, -εως ‘acció’",d:"Pràctica, en oposició a la teoria."},
+ {w:"estomatologia",n:["sto"],e:"στόμα, -ατος + λόγος",d:"Especialitat mèdica que estudia la boca i les seues malalties."}
+];
+
+const shuffle=a=>{a=[...a];for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a};
+const $=s=>document.querySelector(s);
+const game=$("#game");
+let deck,idx,score,missed,state,showGloss=true;
+
+function start(list){
+  deck=shuffle(list||WORDS);idx=0;score=0;missed=[];render();
+}
+function render(){
+  if(idx>=deck.length) return renderEnd();
+  const it=deck[idx];
+  state={step:1,firstTry1:true,firstTry2:true};
+  const nounOpts=shuffle([...it.n,...shuffle(Object.keys(NOUNS).filter(k=>!it.n.includes(k))).slice(0,9-it.n.length)]);
+  const opts=shuffle([it.d,...shuffle(WORDS.filter(x=>x.d!==it.d)).slice(0,3).map(x=>x.d)]);
+  const max=deck.length*2;
+  game.innerHTML=`
+    <div class="progress"><span>${idx+1} / ${deck.length}</span><div class="bar"><i style="width:${idx/deck.length*100}%"></i></div><span class="score">${score} / ${max} punts</span></div>
+    <p class="word">${it.w}</p>
+    <div>
+      <div class="row" style="margin-bottom:10px"><div class="step-label"><span>Pas 1</span> Amb quin substantiu grec es relaciona?</div>
+      <label class="toggle"><input type="checkbox" id="gloss" ${showGloss?"checked":""}> Mostra'n el significat</label></div>
+      <div class="nouns ${showGloss?"":"hide-gloss"}" id="nouns">${nounOpts.map(k=>[k,NOUNS[k]]).map(([k,v])=>`<button class="noun" data-k="${k}"><span class="g">${v.g}</span><span class="t">${v.t}</span></button>`).join("")}</div>
+    </div>
+    <div id="s2" hidden>
+      <div class="step-label" style="margin-bottom:10px"><span>Pas 2</span> Quina n'és la definició?</div>
+      <div class="defs">${opts.map(o=>`<button class="def">${o}</button>`).join("")}</div>
+    </div>
+    <div id="fb" class="feedback" hidden></div>
+    <div class="row" id="next" hidden><span class="note"></span><button class="btn" id="go">${idx+1<deck.length?"Següent paraula →":"Veure el resultat"}</button></div>`;
+  $("#gloss").onchange=e=>{showGloss=e.target.checked;$("#nouns").classList.toggle("hide-gloss",!showGloss)};
+  game.querySelectorAll(".noun").forEach(b=>b.onclick=()=>{
+    if(state.step!==1) return;
+    if(it.n.includes(b.dataset.k)){
+      b.classList.add("is-ok");state.step=2;if(state.firstTry1) score++;
+      game.querySelectorAll(".noun").forEach(x=>{x.disabled=true;if(it.n.includes(x.dataset.k))x.classList.add("is-ok")});
+      const fb=$("#fb");fb.hidden=false;
+      fb.innerHTML=`Etimologia: <b>${it.e}</b>`;
+      $("#s2").hidden=false;updScore();
+    }else{b.classList.add("is-bad");b.disabled=true;state.firstTry1=false}
+  });
+  game.querySelectorAll(".def").forEach(b=>b.onclick=()=>{
+    if(state.step!==2) return;
+    if(b.textContent===it.d){
+      b.classList.add("is-ok");state.step=3;if(state.firstTry2) score++;
+      if(!(state.firstTry1&&state.firstTry2)) missed.push(it);
+      game.querySelectorAll(".def").forEach(x=>x.disabled=true);
+      $("#next").hidden=false;updScore();$("#go").focus();
+    }else{b.classList.add("is-bad");b.disabled=true;state.firstTry2=false}
+  });
+  $("#go").onclick=()=>{idx++;render()};
+}
+function updScore(){game.querySelector(".score").textContent=`${score} / ${deck.length*2} punts`}
+function renderEnd(){
+  const max=deck.length*2,pct=Math.round(score/max*100);
+  const msg=pct===100?"Ἄριστα! Perfecte.":pct>=70?"Molt bé! Repassa les que t'han costat.":"Repassa el lèxic i torna-ho a provar.";
+  game.innerHTML=`<div class="summary">
+    <div class="eyebrow">Resultat</div>
+    <div class="big">${score}<span style="font-size:28px;color:var(--muted)"> / ${max}</span></div>
+    <p style="margin:0">${msg}</p>
+    ${missed.length?`<p class="note" style="margin:0">Paraules amb algun error:</p><div class="missed">${missed.map(m=>`<span class="chip">${m.w}</span>`).join("")}</div>`:""}
+    <div class="row" style="justify-content:center">
+      ${missed.length?`<button class="btn" id="retry">Repeteix les fallades</button>`:""}
+      <button class="btn ghost" id="again">Torna a començar</button>
+    </div></div>`;
+  if(missed.length) $("#retry").onclick=()=>start(missed);
+  $("#again").onclick=()=>start();
+}
+
+// Lèxic
+const lexEl=$("#lex");
+lexEl.innerHTML=Object.entries(NOUNS).map(([k,v])=>`<div><div class="g">${v.g}</div><div class="t">${v.t}</div><div class="ex">${WORDS.filter(w=>w.n.includes(k)).map(w=>w.w).join(", ")}</div></div>`).join("");
+
+// Solucionari
+const solEl=$("#sol");
+solEl.innerHTML=`<thead><tr><th>Paraula</th><th>Substantiu grec</th><th>Definició</th></tr></thead><tbody>${
+  [...WORDS].sort((a,b)=>a.w.localeCompare(b.w,"ca")).map(w=>`<tr><td class="w">${w.w}</td><td class="gr">${w.n.map(k=>NOUNS[k].g.split(",")[0]).join(" + ")}</td><td class="d">${w.d}</td></tr>`).join("")}</tbody>`;
+solEl.addEventListener("click",e=>{const td=e.target.closest("td.d");if(td)td.classList.toggle("shown")});
+$("#showAll").onchange=e=>solEl.querySelectorAll("td.d").forEach(td=>td.classList.toggle("shown",e.target.checked));
+
+// Pestanyes
+document.querySelectorAll("nav button").forEach(b=>b.onclick=()=>{
+  document.querySelectorAll("nav button").forEach(x=>x.setAttribute("aria-selected",x===b));
+  ["joc","lexic","sol"].forEach(v=>$("#view-"+v).hidden=v!==b.dataset.view);
+});
+
+start();
+</script>
+</body>
+</html>
