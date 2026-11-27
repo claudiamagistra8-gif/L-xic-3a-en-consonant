@@ -1,0 +1,560 @@
+<!DOCTYPE html>
+<html lang="ca">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Repàs de morfologia · Grec I</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Commissioner:wght@400;600;800&family=Noto+Serif:wght@400;600&display=swap" rel="stylesheet">
+<style>
+/* VOICE: classroom drill, clear and encouraging, no clutter
+   IDEA: an exam sheet framed by a Greek meander, like a vase band
+   PICTURE: the quiz card itself, with a meander band on the header
+   COLOUR and TYPE: Aegean blue field, white sheet, terracotta accent; Commissioner + Noto Serif for polytonic Greek
+   LAYOUT: menu of section cards -> one question card -> results; tables stack on phones */
+:root{color-scheme:light dark;
+--bg:light-dark(#ffffff,#0f1720);--ink:light-dark(#14202b,#e6ecf2);--mute:light-dark(#5b6773,#9aa8b6);
+--sea:light-dark(#1f4e79,#173b5c);--sea2:light-dark(#e8eff6,#16283a);--line:light-dark(#d6dee6,#2a3b4c);
+--terra:light-dark(#c2552d,#e07a4f);--ok:light-dark(#1d7a46,#4cc483);--okb:light-dark(#e5f4ea,#13301f);
+--bad:light-dark(#b3261e,#ff7b72);--badb:light-dark(#fbe9e7,#3a1b1a);--card:light-dark(#ffffff,#152230)}
+:root[data-theme=light]{color-scheme:light}:root[data-theme=dark]{color-scheme:dark}
+*{box-sizing:border-box;min-width:0}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.55 Commissioner,system-ui,sans-serif;overflow-x:clip}
+.gr{font-family:"Noto Serif","GFS Didot","Times New Roman",serif}
+header{background:var(--sea);color:#fff;padding:clamp(22px,3.5vw,44px) max(5vw,16px) 0}
+header h1{margin:0;font-size:clamp(28px,4.4vw,44px);line-height:1.05;font-weight:800;text-wrap:balance}
+header p{margin:8px 0 18px;max-width:62ch;opacity:.88}
+.meander{display:block;width:100%;height:22px;margin-top:6px}
+main{max-width:1000px;margin:0 auto;padding:clamp(20px,3vw,40px) max(4vw,16px) 60px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,280px),1fr));gap:14px}
+.sec{all:unset;box-sizing:border-box;cursor:pointer;display:flex;flex-direction:column;gap:6px;padding:18px;border:1px solid var(--line);border-radius:14px;background:var(--card);transition:transform .15s,border-color .15s}
+.sec:hover,.sec:focus-visible{border-color:var(--sea);transform:translateY(-2px)}
+.sec:focus-visible{outline:3px solid var(--terra);outline-offset:2px}
+.sec h3{margin:0;font-size:19px;line-height:1.2}
+.sec .d{color:var(--mute);font-size:14.5px}
+.sec .meta{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-top:auto;padding-top:6px;font-size:13.5px;color:var(--mute)}
+.badge{background:var(--terra);color:#fff;border-radius:99px;padding:2px 10px;font-size:13px;font-weight:600}
+.sec.big{background:var(--sea2)}
+h2{font-size:22px;margin:30px 0 12px}
+.top{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:16px}
+.btn{font:inherit;font-weight:600;border:1px solid var(--line);background:var(--card);color:var(--ink);border-radius:10px;padding:10px 16px;min-height:44px;cursor:pointer}
+.btn.pri{background:var(--sea);border-color:var(--sea);color:#fff}
+.btn:focus-visible{outline:3px solid var(--terra);outline-offset:2px}
+.bar{flex:1;height:8px;background:var(--sea2);border-radius:9px;overflow:hidden;min-width:120px}
+.bar i{display:block;height:100%;background:var(--terra);transition:width .3s}
+.count{font-size:14px;color:var(--mute);white-space:nowrap}
+.qcard{border:1px solid var(--line);border-radius:16px;padding:clamp(18px,3vw,30px);background:var(--card)}
+.qtag{font-size:13.5px;color:var(--terra);font-weight:600;margin-bottom:6px}
+.prompt{font-size:19px;line-height:1.45}
+.prompt .big{display:block;font-size:clamp(28px,5vw,38px);margin:10px 0 2px;line-height:1.2}
+.prompt small{color:var(--mute);font-size:15px}
+.opts{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:20px}
+.opt{font:inherit;text-align:left;border:1.5px solid var(--line);background:var(--bg);color:var(--ink);border-radius:12px;padding:12px 14px;min-height:52px;cursor:pointer;display:flex;gap:10px;align-items:baseline}
+.opt .k{font-size:13px;color:var(--mute);font-weight:600;flex:none}
+.opt.gr{font-size:21px}
+.opt:hover:not(:disabled){border-color:var(--sea)}
+.opt:focus-visible{outline:3px solid var(--terra);outline-offset:2px}
+.opt.ok{border-color:var(--ok);background:var(--okb)}
+.opt.bad{border-color:var(--bad);background:var(--badb)}
+.opt:disabled{cursor:default}
+.fb{margin-top:18px;padding:16px;border-radius:12px;background:var(--sea2);display:none}
+.fb.on{display:block;animation:in .25s ease}
+@keyframes in{from{opacity:0;transform:translateY(6px)}}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+.fb b.v{display:block;font-size:17px;margin-bottom:4px}
+.fb b.v.ok{color:var(--ok)}.fb b.v.bad{color:var(--bad)}
+.note{margin:6px 0}
+.scroll{overflow-x:auto}
+table.par{border-collapse:collapse;margin-top:10px;font-size:15px}
+.par th,.par td{border:1px solid var(--line);padding:5px 10px;text-align:left}
+.par th{font-weight:600;color:var(--mute);font-size:13.5px}
+.par td.gr{font-size:17px;white-space:nowrap}
+.par td.hl{background:color-mix(in srgb,var(--terra) 22%,transparent);font-weight:600}
+.par .art{color:var(--mute);font-size:.85em;margin-right:4px}
+.par tr.sub th{background:var(--sea2);color:var(--ink)}
+.next{margin-top:16px;display:flex;justify-content:flex-end}
+.res{text-align:center;padding:10px 0}
+.res .score{font-size:clamp(44px,8vw,64px);font-weight:800;color:var(--sea);line-height:1}
+:root[data-theme=dark] .res .score{color:#8fc1ec}
+@media (prefers-color-scheme:dark){:root:not([data-theme=light]) .res .score{color:#8fc1ec}}
+.rev{text-align:left;margin-top:22px}
+.rev li{margin-bottom:10px}
+.row{display:flex;gap:10px;flex-wrap:wrap;justify-content:center;margin-top:18px}
+select{font:inherit;font-size:16px;padding:8px;border-radius:9px;border:1px solid var(--line);background:var(--bg);color:var(--ink);min-height:44px;max-width:100%}
+select.gr{font-family:"Noto Serif",serif;font-size:17px;min-width:9em}
+select.ok{border-color:var(--ok);background:var(--okb)}select.bad{border-color:var(--bad);background:var(--badb)}
+.tbl td{padding:4px}
+.hint{color:var(--mute);font-size:14px}
+footer{color:var(--mute);font-size:13.5px;text-align:center;padding:0 16px 30px}
+@media(max-width:600px){.opts{grid-template-columns:1fr}.prompt{font-size:17px}table.par{font-size:13px}.par td.gr{font-size:15px}.par th,.par td{padding:4px 6px}}
+</style>
+</head>
+<body>
+<header>
+  <h1>Repàs de morfologia · Grec I</h1>
+  <p>Declinacions, adjectius i verbs. Tria un bloc, respon i mira l'explicació i el paradigma després de cada pregunta. Cada ronda és diferent.</p>
+  <svg class="meander" viewBox="0 0 400 22" preserveAspectRatio="none" aria-hidden="true">
+    <defs><pattern id="mq" width="22" height="22" patternUnits="userSpaceOnUse">
+      <path d="M1 21V1h18v14H7V7h6v4" fill="none" stroke="#fff" stroke-opacity=".75" stroke-width="2.2"/></pattern></defs>
+    <rect width="400" height="22" fill="url(#mq)"/>
+  </svg>
+</header>
+<main id="app"></main>
+<footer>Abreviatures: N(om.), V(oc.), Ac., Gen., Dat. · sg. singular · pl. plural · m., f., n.</footer>
+<script>
+{
+/* ================= DADES ================= */
+const CASES=['N','V','A','G','D'],NUMS=['sg','pl'];
+const CF={N:'nominatiu',V:'vocatiu',A:'acusatiu',G:'genitiu',D:'datiu'};
+const CA={N:'Nom.',V:'Voc.',A:'Ac.',G:'Gen.',D:'Dat.'};
+const NN={sg:'singular',pl:'plural'};
+const GN={m:'masculí',f:'femení',n:'neutre'};
+const artRow=s=>{const a=s.split(' '),o={};NUMS.forEach((nm,j)=>CASES.forEach((c,i)=>o[c+' '+nm]=a[j*5+i]));return o};
+const ART={m:artRow('ὁ ὦ τὸν τοῦ τῷ οἱ ὦ τοὺς τῶν τοῖς'),f:artRow('ἡ ὦ τὴν τῆς τῇ αἱ ὦ τὰς τῶν ταῖς'),n:artRow('τὸ ὦ τὸ τοῦ τῷ τὰ ὦ τὰ τῶν τοῖς')};
+
+const T={p:'1a decl. · femení en -α pura',x:'1a decl. · femení en -α mixta',e:'1a decl. · femení en -η',as:'1a decl. · masculí en -ας',es:'1a decl. · masculí en -ης',
+o:'2a decl. · masculí en -ος',of:'2a decl. · femení en -ος',on:'2a decl. · neutre en -ον',
+g:'3a decl. · oclusiva gutural (κ, γ, χ)',l:'3a decl. · oclusiva labial (π, β, φ)',d:'3a decl. · oclusiva dental (τ, δ, θ)',n:'3a decl. · nasal (ν)'};
+const PH={g:'Gutural + σ → ξ (al nom. sg. i al dat. pl.).',l:'Labial + σ → ψ (al nom. sg. i al dat. pl.).',d:'La dental (τ, δ, θ) cau davant σ i a final de paraula.',
+n:'La ν cau davant σ (dat. pl.). Nom. sg. sense -ς; si la vocal de l’arrel és breu, s’allarga (ο → ω, ε → η).'};
+
+const NOUNS=[];
+function noun(sec,t,lemma,gen,art,cat,sg,pl,x={}){
+  const g={'ὁ':'m','ἡ':'f','τό':'n'}[art];const f={};const s=sg.split(' '),p=pl.split(' ');
+  CASES.forEach((c,i)=>{f[c+' sg']=s[i];f[c+' pl']=p[i]});
+  NOUNS.push({sec,t,type:T[t],lemma,gen,art,g,cat,f,enunc:`${lemma}, ${gen} (${art})`,...x});
+}
+// 1a i 2a
+noun('d12','p','θεά','θεᾶς','ἡ','deessa','θεά θεά θεάν θεᾶς θεᾷ','θεαί θεαί θεάς θεῶν θεαῖς');
+noun('d12','p','χώρα','χώρας','ἡ','regió, territori','χώρα χώρα χώραν χώρας χώρᾳ','χῶραι χῶραι χώρας χωρῶν χώραις');
+noun('d12','x','δόξα','δόξης','ἡ','opinió, glòria','δόξα δόξα δόξαν δόξης δόξῃ','δόξαι δόξαι δόξας δοξῶν δόξαις');
+noun('d12','e','κόρη','κόρης','ἡ','xica','κόρη κόρη κόρην κόρης κόρῃ','κόραι κόραι κόρας κορῶν κόραις');
+noun('d12','as','νεανίας','νεανίου','ὁ','jove','νεανίας νεανία νεανίαν νεανίου νεανίᾳ','νεανίαι νεανίαι νεανίας νεανιῶν νεανίαις');
+noun('d12','es','πολίτης','πολίτου','ὁ','ciutadà','πολίτης πολῖτα πολίτην πολίτου πολίτῃ','πολῖται πολῖται πολίτας πολιτῶν πολίταις');
+noun('d12','o','λόγος','λόγου','ὁ','paraula','λόγος λόγε λόγον λόγου λόγῳ','λόγοι λόγοι λόγους λόγων λόγοις');
+noun('d12','of','ὁδός','ὁδοῦ','ἡ','camí','ὁδός ὁδέ ὁδόν ὁδοῦ ὁδῷ','ὁδοί ὁδοί ὁδούς ὁδῶν ὁδοῖς');
+noun('d12','on','δῶρον','δώρου','τό','regal, do','δῶρον δῶρον δῶρον δώρου δώρῳ','δῶρα δῶρα δῶρα δώρων δώροις');
+noun('d12','o','ἄνθρωπος','ἀνθρώπου','ὁ','persona, ésser humà','ἄνθρωπος ἄνθρωπε ἄνθρωπον ἀνθρώπου ἀνθρώπῳ','ἄνθρωποι ἄνθρωποι ἀνθρώπους ἀνθρώπων ἀνθρώποις');
+// 3a oclusiva
+noun('ocl','g','φύλαξ','φύλακος','ὁ','guardià','φύλαξ φύλαξ φύλακα φύλακος φύλακι','φύλακες φύλακες φύλακας φυλάκων φύλαξι(ν)',{root:'φυλακ-',fake:['φύλακς, φύλακος','φύλαψ, φύλακος','φύλαξ, φύλαξος'],fakeRoot:['φυλαξ-','φυλα-','φυλακος-'],trap:{'D pl':['φύλακσι(ν)','φυλάκοις'],'N sg':['φύλακς']}});
+noun('ocl','g','κῆρυξ','κήρυκος','ὁ','herald','κῆρυξ κῆρυξ κήρυκα κήρυκος κήρυκι','κήρυκες κήρυκες κήρυκας κηρύκων κήρυξι(ν)',{root:'κηρυκ-',fake:['κῆρυκς, κήρυκος','κῆρυψ, κήρυκος','κῆρυξ, κήρυξος'],fakeRoot:['κηρυξ-','κηρυ-','κηρυγ-'],trap:{'D pl':['κήρυκσι(ν)','κηρύκοις']}});
+noun('ocl','g','κόραξ','κόρακος','ὁ','corb','κόραξ κόραξ κόρακα κόρακος κόρακι','κόρακες κόρακες κόρακας κοράκων κόραξι(ν)',{root:'κορακ-',fake:['κόρακς, κόρακος','κόραψ, κόρακος','κόραξ, κόραξος'],fakeRoot:['κοραξ-','κορα-','κορακος-'],trap:{'D pl':['κόρακσι(ν)','κοράκοις']}});
+noun('ocl','g','αἴξ','αἰγός','ἡ','cabra','αἴξ αἴξ αἶγα αἰγός αἰγί','αἶγες αἶγες αἶγας αἰγῶν αἰξί(ν)',{root:'αἰγ-',fake:['αἴγς, αἰγός','αἴψ, αἰγός','αἴς, αἰγός'],fakeRoot:['αἰξ-','αἰ-','αἰκ-'],trap:{'D pl':['αἰγσί(ν)','αἰγοῖς']}});
+noun('ocl','l','Αἰθίοψ','Αἰθίοπος','ὁ','etíop','Αἰθίοψ Αἰθίοψ Αἰθίοπα Αἰθίοπος Αἰθίοπι','Αἰθίοπες Αἰθίοπες Αἰθίοπας Αἰθιόπων Αἰθίοψι(ν)',{root:'Αἰθιοπ-',fake:['Αἰθίοπς, Αἰθίοπος','Αἰθίοξ, Αἰθίοπος','Αἰθίοψ, Αἰθίοψος'],fakeRoot:['Αἰθιοψ-','Αἰθιο-','Αἰθιοβ-'],trap:{'D pl':['Αἰθίοπσι(ν)','Αἰθιόποις']}});
+noun('ocl','l','φλέψ','φλεβός','ἡ','vena','φλέψ φλέψ φλέβα φλεβός φλεβί','φλέβες φλέβες φλέβας φλεβῶν φλεψί(ν)',{root:'φλεβ-',fake:['φλέβς, φλεβός','φλέξ, φλεβός','φλέψ, φλεψός'],fakeRoot:['φλεψ-','φλε-','φλεπ-'],trap:{'D pl':['φλεβσί(ν)','φλεβοῖς']}});
+noun('ocl','l','γύψ','γυπός','ὁ','voltor','γύψ γύψ γῦπα γυπός γυπί','γῦπες γῦπες γῦπας γυπῶν γυψί(ν)',{root:'γυπ-',fake:['γύπς, γυπός','γύξ, γυπός','γύψ, γυψός'],fakeRoot:['γυψ-','γυ-','γυβ-'],trap:{'D pl':['γυπσί(ν)','γυποῖς']}});
+noun('ocl','d','ἐλπίς','ἐλπίδος','ἡ','esperança','ἐλπίς ἐλπί ἐλπίδα ἐλπίδος ἐλπίδι','ἐλπίδες ἐλπίδες ἐλπίδας ἐλπίδων ἐλπίσι(ν)',{root:'ἐλπιδ-',fake:['ἐλπίδς, ἐλπίδος','ἐλπίξ, ἐλπίδος','ἐλπίς, ἐλπίσος'],fakeRoot:['ἐλπισ-','ἐλπι-','ἐλπιτ-'],trap:{'D pl':['ἐλπίδσι(ν)','ἐλπίδοις']}});
+noun('ocl','d','παῖς','παιδός','ὁ','xiquet, nen','παῖς παῖ παῖδα παιδός παιδί','παῖδες παῖδες παῖδας παίδων παισί(ν)',{root:'παιδ-',fake:['παῖδς, παιδός','παῖξ, παιδός','παῖς, παισός'],fakeRoot:['παισ-','παι-','παιτ-'],trap:{'D pl':['παιδσί(ν)','παιδοῖς']}});
+noun('ocl','d','σῶμα','σώματος','τό','cos','σῶμα σῶμα σῶμα σώματος σώματι','σώματα σώματα σώματα σωμάτων σώμασι(ν)',{root:'σωματ-',fake:['σῶματ, σώματος','σῶμας, σώματος','σῶμα, σώμου'],fakeRoot:['σωμα-','σωμ-','σωματος-'],trap:{'D pl':['σώματσι(ν)','σωμάτοις'],'N pl':['σώματες']},note:'Neutre: N, V i Ac. iguals. Al nom. sg. la τ final cau (cap paraula grega acaba en τ).'});
+noun('ocl','d','πρᾶγμα','πράγματος','τό','assumpte, cosa','πρᾶγμα πρᾶγμα πρᾶγμα πράγματος πράγματι','πράγματα πράγματα πράγματα πραγμάτων πράγμασι(ν)',{root:'πραγματ-',fake:['πρᾶγματ, πράγματος','πρᾶγμας, πράγματος','πρᾶγμα, πράγμου'],fakeRoot:['πραγμα-','πραγμ-','πραγματος-'],trap:{'D pl':['πράγματσι(ν)','πραγμάτοις'],'N pl':['πράγματες']},note:'Neutre: N, V i Ac. iguals. Al nom. sg. la τ final cau (cap paraula grega acaba en τ).'});
+noun('ocl','d','νύξ','νυκτός','ἡ','nit','νύξ νύξ νύκτα νυκτός νυκτί','νύκτες νύκτες νύκτας νυκτῶν νυξί(ν)',{root:'νυκτ-',noType:1,fake:['νύκτς, νυκτός','νύκς, νυκτός','νύψ, νυκτός'],fakeRoot:['νυξ-','νυκ-','νυ-'],trap:{'D pl':['νυκτσί(ν)','νυκσί(ν)']},note:'Arrel νυκτ-: davant σ cau la τ i κ + σ → ξ (νύξ, νυξί).'});
+// 3a nasal
+noun('nas','n','δαίμων','δαίμονος','ὁ','divinitat','δαίμων δαῖμον δαίμονα δαίμονος δαίμονι','δαίμονες δαίμονες δαίμονας δαιμόνων δαίμοσι(ν)',{root:'δαιμον-',fake:['δαίμονς, δαίμονος','δαίμον, δαίμονος','δαίμων, δαίμωνος'],fakeRoot:['δαιμων-','δαιμ-','δαιμονος-'],trap:{'D pl':['δαίμονσι(ν)','δαιμόνοις','δαίμωσι(ν)']},note:'Vocatiu: l’arrel pura, δαῖμον.'});
+noun('nas','n','ποιμήν','ποιμένος','ὁ','pastor','ποιμήν ποιμήν ποιμένα ποιμένος ποιμένι','ποιμένες ποιμένες ποιμένας ποιμένων ποιμέσι(ν)',{root:'ποιμεν-',fake:['ποιμένς, ποιμένος','ποιμέν, ποιμένος','ποιμήν, ποιμῆνος'],fakeRoot:['ποιμην-','ποιμ-','ποιμενος-'],trap:{'D pl':['ποιμένσι(ν)','ποιμῆσι(ν)']}});
+noun('nas','n','λιμήν','λιμένος','ὁ','port','λιμήν λιμήν λιμένα λιμένος λιμένι','λιμένες λιμένες λιμένας λιμένων λιμέσι(ν)',{root:'λιμεν-',fake:['λιμένς, λιμένος','λιμέν, λιμένος','λιμήν, λιμῆνος'],fakeRoot:['λιμην-','λιμ-','λιμενος-'],trap:{'D pl':['λιμένσι(ν)','λιμῆσι(ν)']}});
+noun('nas','n','ἀγών','ἀγῶνος','ὁ','competició, lluita','ἀγών ἀγών ἀγῶνα ἀγῶνος ἀγῶνι','ἀγῶνες ἀγῶνες ἀγῶνας ἀγώνων ἀγῶσι(ν)',{root:'ἀγων-',fake:['ἀγῶνς, ἀγῶνος','ἀγόν, ἀγῶνος','ἀγών, ἀγόνος'],fakeRoot:['ἀγον-','ἀγ-','ἀγωνος-'],trap:{'D pl':['ἀγῶνσι(ν)','ἀγώνοις']},note:'La vocal de l’arrel ja és llarga (ω): el nom. no canvia.'});
+noun('nas','n','χειμών','χειμῶνος','ὁ','hivern, tempesta','χειμών χειμών χειμῶνα χειμῶνος χειμῶνι','χειμῶνες χειμῶνες χειμῶνας χειμώνων χειμῶσι(ν)',{root:'χειμων-',fake:['χειμῶνς, χειμῶνος','χειμόν, χειμῶνος','χειμών, χειμόνος'],fakeRoot:['χειμον-','χειμ-','χειμωνος-'],trap:{'D pl':['χειμῶνσι(ν)','χειμώνοις']}});
+noun('nas','n','Ἕλλην','Ἕλληνος','ὁ','grec, hel·lè','Ἕλλην Ἕλλην Ἕλληνα Ἕλληνος Ἕλληνι','Ἕλληνες Ἕλληνες Ἕλληνας Ἑλλήνων Ἕλλησι(ν)',{root:'Ἑλλην-',fake:['Ἕλληνς, Ἕλληνος','Ἕλλεν, Ἕλληνος','Ἕλλην, Ἕλλενος'],fakeRoot:['Ἑλλεν-','Ἑλλ-','Ἑλληνος-'],trap:{'D pl':['Ἕλληνσι(ν)','Ἑλλήνοις']}});
+noun('nas','n','γείτων','γείτονος','ὁ','veí','γείτων γεῖτον γείτονα γείτονος γείτονι','γείτονες γείτονες γείτονας γειτόνων γείτοσι(ν)',{root:'γειτον-',fake:['γείτονς, γείτονος','γείτον, γείτονος','γείτων, γείτωνος'],fakeRoot:['γειτων-','γειτ-','γειτονος-'],trap:{'D pl':['γείτονσι(ν)','γειτόνοις']},note:'Vocatiu: l’arrel pura, γεῖτον.'});
+
+const ADJS=[];
+const TY={'2-1-2':'2-1-2 (masc. 2a · fem. 1a · neutre 2a)','2-2':'2-2 (masc./fem. 2a · neutre 2a)','3-1-3':'3-1-3 (masc. 3a · fem. 1a · neutre 3a)','3-3':'3-3 (masc./fem. 3a · neutre 3a)'};
+function adj(sec,type,enunc,cat,m,f,n,note){
+  const o={sec,type,enunc,cat,f:{},two:!f,note};
+  const put=(g,s)=>{const [a,b]=s.split('|');const A=a.split(' '),B=b.split(' ');CASES.forEach((c,i)=>{o.f[g+' '+c+' sg']=A[i];o.f[g+' '+c+' pl']=B[i]})};
+  put('m',m);put('f',f||m);put('n',n);ADJS.push(o);
+}
+adj('adj','2-1-2','καλός, -ή, -όν','bell, bo','καλός καλέ καλόν καλοῦ καλῷ|καλοί καλοί καλούς καλῶν καλοῖς','καλή καλή καλήν καλῆς καλῇ|καλαί καλαί καλάς καλῶν καλαῖς','καλόν καλόν καλόν καλοῦ καλῷ|καλά καλά καλά καλῶν καλοῖς','Femení en -η, com κόρη.');
+adj('adj','2-1-2','δίκαιος, -α, -ον','just','δίκαιος δίκαιε δίκαιον δικαίου δικαίῳ|δίκαιοι δίκαιοι δικαίους δικαίων δικαίοις','δικαία δικαία δικαίαν δικαίας δικαίᾳ|δίκαιαι δίκαιαι δικαίας δικαίων δικαίαις','δίκαιον δίκαιον δίκαιον δικαίου δικαίῳ|δίκαια δίκαια δίκαια δικαίων δικαίοις','Femení en α pura (darrere ι), com χώρα.');
+adj('adj','2-1-2','μικρός, -ά, -όν','petit','μικρός μικρέ μικρόν μικροῦ μικρῷ|μικροί μικροί μικρούς μικρῶν μικροῖς','μικρά μικρά μικράν μικρᾶς μικρᾷ|μικραί μικραί μικράς μικρῶν μικραῖς','μικρόν μικρόν μικρόν μικροῦ μικρῷ|μικρά μικρά μικρά μικρῶν μικροῖς','Femení en α pura (darrere ρ).');
+adj('adj','2-2','ἀθάνατος, -ον','immortal','ἀθάνατος ἀθάνατε ἀθάνατον ἀθανάτου ἀθανάτῳ|ἀθάνατοι ἀθάνατοι ἀθανάτους ἀθανάτων ἀθανάτοις',null,'ἀθάνατον ἀθάνατον ἀθάνατον ἀθανάτου ἀθανάτῳ|ἀθάνατα ἀθάνατα ἀθάνατα ἀθανάτων ἀθανάτοις','2-2: el femení té les mateixes formes que el masculí.');
+adj('adj','2-2','ἄδικος, -ον','injust','ἄδικος ἄδικε ἄδικον ἀδίκου ἀδίκῳ|ἄδικοι ἄδικοι ἀδίκους ἀδίκων ἀδίκοις',null,'ἄδικον ἄδικον ἄδικον ἀδίκου ἀδίκῳ|ἄδικα ἄδικα ἄδικα ἀδίκων ἀδίκοις','2-2: el femení té les mateixes formes que el masculí.');
+adj('adjn','3-1-3','μέλας, μέλαινα, μέλαν','negre','μέλας μέλαν μέλανα μέλανος μέλανι|μέλανες μέλανες μέλανας μελάνων μέλασι(ν)','μέλαινα μέλαινα μέλαιναν μελαίνης μελαίνῃ|μέλαιναι μέλαιναι μελαίνας μελαινῶν μελαίναις','μέλαν μέλαν μέλαν μέλανος μέλανι|μέλανα μέλανα μέλανα μελάνων μέλασι(ν)','Masc. i neutre: 3a nasal (arrel μελαν-). Fem.: 1a decl. en α mixta (com δόξα).');
+adj('adjn','3-1-3','τάλας, τάλαινα, τάλαν','desgraciat','τάλας τάλαν τάλανα τάλανος τάλανι|τάλανες τάλανες τάλανας ταλάνων τάλασι(ν)','τάλαινα τάλαινα τάλαιναν ταλαίνης ταλαίνῃ|τάλαιναι τάλαιναι ταλαίνας ταλαινῶν ταλαίναις','τάλαν τάλαν τάλαν τάλανος τάλανι|τάλανα τάλανα τάλανα ταλάνων τάλασι(ν)','Masc. i neutre: 3a nasal (arrel ταλαν-). Fem.: 1a decl. en α mixta.');
+adj('adjn','3-3','εὐδαίμων, -ον','feliç','εὐδαίμων εὔδαιμον εὐδαίμονα εὐδαίμονος εὐδαίμονι|εὐδαίμονες εὐδαίμονες εὐδαίμονας εὐδαιμόνων εὐδαίμοσι(ν)',null,'εὔδαιμον εὔδαιμον εὔδαιμον εὐδαίμονος εὐδαίμονι|εὐδαίμονα εὐδαίμονα εὐδαίμονα εὐδαιμόνων εὐδαίμοσι(ν)','3-3: masc./fem. com δαίμων; el neutre és l’arrel pura (εὔδαιμον) i fa el pl. en -α.');
+adj('adjn','3-3','σώφρων, -ον','prudent, assenyat','σώφρων σῶφρον σώφρονα σώφρονος σώφρονι|σώφρονες σώφρονες σώφρονας σωφρόνων σώφροσι(ν)',null,'σῶφρον σῶφρον σῶφρον σώφρονος σώφρονι|σώφρονα σώφρονα σώφρονα σωφρόνων σώφροσι(ν)','3-3: masc./fem. iguals; neutre σῶφρον, pl. σώφρονα.');
+adj('adjn','3-3','ἄφρων, -ον','insensat','ἄφρων ἄφρον ἄφρονα ἄφρονος ἄφρονι|ἄφρονες ἄφρονες ἄφρονας ἀφρόνων ἄφροσι(ν)',null,'ἄφρον ἄφρον ἄφρον ἄφρονος ἄφρονι|ἄφρονα ἄφρονα ἄφρονα ἀφρόνων ἄφροσι(ν)','3-3: masc./fem. iguals; neutre ἄφρον, pl. ἄφρονα.');
+
+const PERS=['1a sg.','2a sg.','3a sg.','1a pl.','2a pl.','3a pl.'];
+const TVN={pa:'present ind. actiu',pm:'present ind. mitjà-passiu',fa:'futur ind. actiu',fm:'futur ind. mitjà',fp:'futur ind. passiu'};
+const TVNOTE={pa:'Present actiu: arrel + vocal temàtica (ο/ε) + desinències primàries actives (-ω, -εις, -ει, -ομεν, -ετε, -ουσι).',
+pm:'Present mitjà-passiu: arrel + vocal temàtica + desinències primàries mitjanes-passives (-ομαι, -ῃ, -εται, -ομεθα, -εσθε, -ονται).',
+fa:'Futur actiu: arrel + morfema temporal -σ- + vocal temàtica + desinències actives.',
+fm:'Futur mitjà: arrel + -σ- + vocal temàtica + desinències mitjanes.',
+fp:'Futur passiu: arrel + -θησ- (θη + σ) + vocal temàtica + desinències mitjanes-passives.'};
+const plain=s=>s.normalize('NFD').replace(/[́̀͂]/g,'').normalize('NFC');
+const act=a=>[a+'ω',a+'εις',a+'ει',a+'ομεν',a+'ετε',a+'ουσι(ν)'];
+const mp=a=>[a+'ομαι',a+'ῃ',a+'εται',plain(a)+'όμεθα',a+'εσθε',a+'ονται'];
+const VERBS=[];
+function verb(lemma,cat,pres,fut,fpas,trapF=[],trapP=[],note=''){
+  const f={pa:act(pres),pm:mp(pres)};
+  if(fut){f.fa=act(fut);f.fm=mp(fut)}
+  if(fpas)f.fp=mp(fpas);
+  VERBS.push({lemma,cat,f,trapF,trapP,fpas,note});
+}
+verb('λύω','deslligar','λύ','λύσ','λυθήσ',[],[],'Arrel vocàlica λυ-: s’hi afegeix directament -σ- / -θησ-.');
+verb('παιδεύω','educar, ensenyar','παιδεύ','παιδεύσ','παιδευθήσ',[],[],'Arrel vocàlica παιδευ-: s’hi afegeix directament -σ- / -θησ-.');
+verb('πέμπω','enviar','πέμπ','πέμψ','πεμφθήσ',['πέμπσ','πέμσ'],['πεμπθήσ','πεμψθήσ'],'Arrel labial: π + σ → ψ (πέμψω); davant θ s’aspira: π + θ → φθ (πεμφθήσομαι).');
+verb('ἄγω','conduir, portar','ἄγ','ἄξ','ἀχθήσ',['ἄγσ','ἄψ'],['ἀγθήσ','ἀξθήσ'],'Arrel gutural: γ + σ → ξ (ἄξω); davant θ s’aspira: γ + θ → χθ (ἀχθήσομαι).');
+verb('ἄρχω','manar, començar','ἄρχ','ἄρξ','ἀρχθήσ',['ἄρχσ','ἄρψ'],['ἀρκθήσ','ἀρξθήσ'],'Arrel gutural: χ + σ → ξ (ἄρξω); χ + θ → χθ (ἀρχθήσομαι).');
+verb('πείθω','persuadir','πείθ','πείσ','πεισθήσ',['πείθσ','πείξ'],['πειθθήσ','πειθήσ'],'Arrel dental: la θ cau davant σ (πείσω); dental + θ → σθ (πεισθήσομαι).');
+verb('φυλάττω','vigilar, guardar','φυλάττ','φυλάξ','φυλαχθήσ',['φυλάττσ','φυλάσ'],['φυλαττθήσ','φυλαξθήσ'],'El present -ττω amaga una arrel gutural, φυλακ-: κ + σ → ξ (φυλάξω); κ + θ → χθ (φυλαχθήσομαι).');
+verb('γράφω','escriure','γράφ',null,null);
+verb('λέγω','dir','λέγ',null,null);
+verb('ἔχω','tindre, tenir','ἔχ',null,null);
+verb('μανθάνω','aprendre','μανθάν',null,null);
+VERBS.push({lemma:'εἰμί',cat:'ser, estar',f:{pa:['εἰμί','εἶ','ἐστί(ν)','ἐσμέν','ἐστέ','εἰσί(ν)'],fm:['ἔσομαι','ἔσῃ','ἔσται','ἐσόμεθα','ἔσεσθε','ἔσονται']},trapF:[],trapP:[],note:'Verb irregular. El futur té forma mitjana però significat actiu (seré…); la 3a sg. ἔσται no porta vocal temàtica.',irr:1});
+
+/* ---- preguntes de teoria ---- */
+const ST={
+d12:[
+['Quina és la desinència del gen. sg. dels masculins de la 1a (νεανίας, πολίτης)?','-ου','-ας','-ης','-ος','Els masculins de la 1a fan el genitiu en -ου, com la 2a: νεανίου, πολίτου.'],
+['ὁδός, ὁδοῦ (ἡ) és…','Un femení de la 2a declinació','Un masculí de la 2a declinació','Un neutre de la 2a declinació','Un femení de la 1a declinació','L’article ἡ ens diu que és femení, tot i acabar en -ος.'],
+['Què és l’α pura?','Una α precedida de ε, ι o ρ, que es manté en tot el singular','Qualsevol α final de paraula','Una α llarga accentuada','L’α dels neutres plurals','χώρα, χώρας, χώρᾳ: darrere ρ l’α es manté.'],
+['Com és el gen. pl. de la 1a declinació?','Sempre -ῶν, amb circumflex a la darrera síl·laba','-ων amb l’accent a l’arrel','-ας','-οις','χωρῶν, δοξῶν, πολιτῶν: tots porten -ῶν.'],
+['Quines són les desinències de dat. pl. de la 1a i de la 2a?','-αις / -οις','-οις / -αις','-ας / -ους','-σι / -οις','θεαῖς, χώραις (1a) · λόγοις, δώροις (2a).'],
+['Per què δόξα fa el genitiu δόξης?','Perquè és α mixta: no va darrere ε, ι, ρ i fa -ης, -ῃ al gen. i dat. sg.','Perquè és masculí','Perquè és de la 2a declinació','Perquè és un plural','α mixta: δόξα, δόξαν però δόξης, δόξῃ.'],
+['En els neutres de la 2a (δῶρον), quins casos són sempre iguals?','N, V i Ac. (sg. -ον, pl. -α)','N i Gen.','Ac. i Dat.','Cap','Regla dels neutres: N = V = Ac.']],
+ocl:[
+['D’on traiem l’arrel d’un substantiu de la 3a declinació?','Del genitiu singular, traient-ne -ος','Del nominatiu singular, traient-ne -ς','Del datiu plural, traient-ne -σι','De l’acusatiu singular, traient-ne -α','El nominatiu sovint està alterat (φύλαξ); el genitiu mostra l’arrel neta: φύλακ-ος → φυλακ-.'],
+['Una oclusiva gutural (κ, γ, χ) seguida de σ dóna…','ξ','ψ','σσ','desapareix','φυλακ-ς → φύλαξ · φυλακ-σι → φύλαξι(ν).'],
+['Una oclusiva labial (π, β, φ) seguida de σ dóna…','ψ','ξ','ζ','desapareix','Αἰθιοπ-ς → Αἰθίοψ · φλεβ-σι → φλεψί(ν).'],
+['Què passa amb una oclusiva dental (τ, δ, θ) davant de σ?','Cau (desapareix)','Es converteix en ξ','Es converteix en ψ','Es duplica','ἐλπιδ-ς → ἐλπίς · παιδ-σι → παισί(ν).'],
+['Per què el nominatiu de σώματος és σῶμα?','Perquè cap paraula grega pot acabar en τ: la dental final cau','Perquè els neutres afegeixen -α','Perquè la τ es transforma en α','Perquè és de la 1a declinació','Arrel σωματ- → σῶμα. Passa en tots els neutres en -μα, -ματος.'],
+['Quina és la desinència del dat. pl. de la 3a declinació?','-σι(ν)','-οις','-αις','-ων','Compte amb els canvis fonètics: φύλαξι, Αἰθίοψι, παισί, δαίμοσι.'],
+['Quina desinència té l’ac. sg. dels masc. i fem. de tema en oclusiva?','-α','-ν','-ος','-ι','φύλακ-α, Αἰθίοπ-α, ἐλπίδ-α.'],
+['Quina desinència té el nom. pl. masc./fem. de la 3a?','-ες','-οι','-αι','-α','φύλακ-ες, ἐλπίδ-ες, δαίμον-ες.'],
+['Quina desinència té l’ac. pl. masc./fem. de la 3a?','-ας','-ους','-ες','-α','φύλακ-ας. No la confongues amb el nom. sg. de νεανίας (1a)!'],
+['Els neutres de 3a (σῶμα, πρᾶγμα) en N, V i Ac. plural acaben en…','-α','-ες','-ας','-οι','σώματα, πράγματα: com tots els neutres, N = V = Ac.'],
+['Què indica la (ν) de φύλαξι(ν)?','És la ν efelcística: s’afegeix davant de vocal o a final de frase','Que la forma és un neutre plural','Que l’arrel acaba en nasal','Que és un datiu singular','També apareix a -ουσι(ν) dels verbs i a ἐστί(ν).'],
+['Quina d’aquestes paraules NO és de tema en oclusiva?','δαίμων, δαίμονος','κῆρυξ, κήρυκος','ἐλπίς, ἐλπίδος','Αἰθίοψ, Αἰθίοπος','δαίμων té l’arrel δαιμον-: és de tema en nasal.'],
+['Quin cas i nombre comparteixen sempre la mateixa forma en els masc./fem. de 3a en oclusiva?','Nom. sg. i voc. sg. (quasi sempre)','Gen. sg. i dat. sg.','Ac. sg. i ac. pl.','Dat. sg. i dat. pl.','φύλαξ, κῆρυξ, Αἰθίοψ: nom. = voc. (excepcions: παῖ, ἐλπί).']],
+nas:[
+['Com es forma el nom. sg. dels substantius de tema en nasal (arrel δαιμον-)?','Sense -ς; la vocal breu de l’arrel s’allarga (ο → ω, ε → η)','Afegint -ς a l’arrel: δαίμονς','Afegint -ος a l’arrel','És igual que l’arrel, sense cap canvi','δαιμον- → δαίμων · ποιμεν- → ποιμήν.'],
+['Què passa al dat. pl. δαιμον-σι?','La ν cau davant σ: δαίμοσι(ν)','La ν es converteix en ξ','La σ es duplica','La ο s’allarga en ω','Sense allargament: δαίμοσι, ποιμέσι, Ἕλλησι.'],
+['Quin és el vocatiu singular de δαίμων?','δαῖμον','δαίμων','δαίμονε','δαίμονα','Els barítons (accent no final) fan el voc. amb l’arrel pura: δαῖμον, γεῖτον. Els oxítons (ποιμήν) el fan igual que el nom.'],
+['Quina és l’arrel de ποιμήν, ποιμένος?','ποιμεν-','ποιμην-','ποιμ-','ποιμενος-','Del genitiu: ποιμέν-ος → ποιμεν-.'],
+['De quin tema és Ἕλλην, Ἕλληνος?','Nasal (ν)','Oclusiva dental','2a declinació','Líquida (λ)','El que compta és la darrera consonant de l’arrel: Ἑλλην-.'],
+['La forma ἀγῶσι(ν) és…','Dat. pl. de ἀγών','Ac. pl. de ἀγών','Nom. pl. de ἀγών','Gen. pl. de ἀγών','ἀγων-σι → la ν cau → ἀγῶσι(ν).'],
+['Per què ἀγών no allarga la vocal al nominatiu?','Perquè la vocal de l’arrel (ἀγων-) ja és llarga','Perquè és neutre','Perquè no és de tema en nasal','Perquè afegeix -ς','Arrel ἀγων-, amb ω: el nom. coincideix amb l’arrel.'],
+['Quina desinència té el gen. sg. tant de δαίμων com de φύλαξ?','-ος en tots dos','-ου en tots dos','-ος i -ου','-ων i -ος','Totes dues paraules són de 3a: δαίμον-ος, φύλακ-ος.'],
+['Quina forma és ambigua entre dos casos en δαίμων?','δαίμονες (nom. i voc. pl.)','δαίμονα','δαίμονος','δαίμονι','En plural, nom. i voc. sempre coincideixen.']],
+adj:[
+['Què indica l’enunciat δίκαιος, -α, -ον?','2-1-2 (masc. 2a · fem. 1a · neutre 2a)','2-2 (masc./fem. 2a · neutre 2a)','3-1-3 (masc. 3a · fem. 1a · neutre 3a)','3-3 (masc./fem. 3a · neutre 3a)','Tres terminacions: -ος (m.), -α (f.), -ον (n.).'],
+['Què indica l’enunciat ἀθάνατος, -ον?','2-2 (masc./fem. 2a · neutre 2a)','2-1-2 (masc. 2a · fem. 1a · neutre 2a)','3-3 (masc./fem. 3a · neutre 3a)','3-1-3 (masc. 3a · fem. 1a · neutre 3a)','ἡ ἀθάνατος θεός: el femení és igual que el masculí.'],
+['Per què el femení de δίκαιος és δικαία i no *δικαίη?','Perquè darrere ε, ι, ρ l’α es manté (α pura)','Perquè és neutre','Perquè és 2-2','Per l’accent','Igual que μικρά (darrere ρ). Però καλή, perquè darrere λ.'],
+['ἡ ἀθάνατος θεά: per què l’adjectiu acaba en -ος amb un femení?','Perquè els adj. 2-2 usen la mateixa forma per a masc. i fem.','Perquè θεά és masculí','És un error','Perquè l’adjectiu només concorda en cas','Concorda en gènere, nombre i cas, però amb la forma de m./f.'],
+['L’adjectiu ha de tindre la mateixa terminació que el substantiu?','No: ha de concordar en gènere, nombre i cas, però la terminació pot ser diferent','Sí, sempre','Només en plural','Només amb substantius de 2a','τοῦ δικαίου πολίτου, τῷ καλῷ φύλακι: terminacions diferents, concordança correcta.']],
+adjn:[
+['μέλας, μέλαινα, μέλαν és un adjectiu…','3-1-3 (masc. 3a · fem. 1a · neutre 3a)','2-1-2 (masc. 2a · fem. 1a · neutre 2a)','3-3 (masc./fem. 3a · neutre 3a)','2-2 (masc./fem. 2a · neutre 2a)','Tres formes al nominatiu i dues declinacions diferents.'],
+['εὐδαίμων, -ον és un adjectiu…','3-3 (masc./fem. 3a · neutre 3a)','3-1-3 (masc. 3a · fem. 1a · neutre 3a)','2-2 (masc./fem. 2a · neutre 2a)','2-1-2 (masc. 2a · fem. 1a · neutre 2a)','Dues terminacions (εὐδαίμων / εὔδαιμον), totes dues de 3a.'],
+['Al nom. sg. masc. μέλας (arrel μελαν- + ς)…','La ν cau davant ς i l’α s’allarga (allargament compensatori)','La ν es converteix en ς','S’afegeix -ας a l’arrel μελ-','No hi ha cap canvi','μελαν-ς → μέλᾱς.'],
+['Quin és el gen. sg. femení de μέλας?','μελαίνης','μέλανος','μελαίνας','μέλαινος','El femení és de la 1a en α mixta (com δόξα): μέλαινα, μελαίνης.'],
+['Quin és el N/V/Ac. sg. neutre de εὐδαίμων?','εὔδαιμον','εὐδαίμων','εὐδαίμονα','εὐδαῖμον','El neutre és l’arrel pura, amb l’accent enrere.'],
+['Quin és el dat. pl. de εὐδαίμων (tots els gèneres)?','εὐδαίμοσι(ν)','εὐδαίμονσι(ν)','εὐδαιμόνοις','εὐδαίμοσσι','Com δαίμοσι: la ν cau davant σ.'],
+['Quin és el N/V/Ac. pl. neutre de μέλας?','μέλανα','μέλαιναι','μέλανες','μέλαν','Neutre de 3a: plural en -α.'],
+['El femení μέλαινα es declina com…','δόξα, -ης (1a decl., α mixta)','χώρα, -ας (α pura)','κόρη, -ης','λόγος, -ου','μέλαινα, μέλαιναν, μελαίνης, μελαίνῃ…'],
+['Quina diferència hi ha entre εὐδαίμων i δαίμων?','εὐδαίμων és adjectiu (té neutre εὔδαιμον); δαίμων és substantiu masculí','Cap: són la mateixa paraula','δαίμων és de la 2a declinació','εὐδαίμων és de la 1a declinació','Es declinen igual en m./f., però l’adjectiu té també neutre.'],
+['Quina forma de σώφρων concorda amb τὸν Ἕλληνα?','σώφρονα','σώφρων','σώφρονος','σῶφρον','Ac. sg. masc.: σώφρονα (aquí coincideix la terminació, però no sempre passa).']],
+pres:[
+['Quines són les desinències (amb vocal temàtica) del present actiu?','-ω, -εις, -ει, -ομεν, -ετε, -ουσι(ν)','-ομαι, -ῃ, -εται, -ομεθα, -εσθε, -ονται','-σω, -σεις, -σει, -σομεν, -σετε, -σουσι(ν)','-ον, -ες, -ε, -ομεν, -ετε, -ον','λύ-ω, λύ-εις, λύ-ει, λύ-ο-μεν, λύ-ε-τε, λύ-ουσι(ν).'],
+['Per què el present es diu «mitjà-passiu»?','Perquè en present les formes mitjanes i passives són idèntiques','Perquè només té veu mitjana','Perquè té significat actiu','Perquè és un futur','λύομαι = em deslligo (mitjà) o sóc deslligat (passiu): ho decideix el context.'],
+['Quina és la 2a sg. del present mitjà-passiu de λύω?','λύῃ (o λύει)','λύεις','λύεσαι','λύσῃ','-εσαι → la σ intervocàlica cau → -ῃ.'],
+['Quina vocal temàtica apareix davant de μ i ν?','ο','ε','α','η','λύ-ο-μεν, λύ-ο-νται; davant de les altres consonants, ε: λύ-ε-τε.'],
+['Quina és la 3a sg. del present de εἰμί?','ἐστί(ν)','εἶ','ἐσμέν','εἰσί(ν)','εἰμί, εἶ, ἐστί(ν), ἐσμέν, ἐστέ, εἰσί(ν).'],
+['λύομεν i λυόμεθα es diferencien per…','La veu: activa / mitjana-passiva','La persona','El nombre','El temps','Totes dues són 1a pl. del present.']],
+fut:[
+['Quin és el morfema temporal del futur actiu i mitjà?','-σ-','-θησ-','-θη-','No en té','λύ-σ-ω, λύ-σ-ομαι.'],
+['Quin és el morfema temporal del futur passiu?','-θησ- (θη + σ)','-σ-','-θ-','-ησ-','λυ-θήσ-ομαι.'],
+['Quines desinències fa servir el futur passiu?','Les mitjanes-passives: -ομαι, -ῃ, -εται…','Les actives: -ω, -εις, -ει…','No té desinències','Les del futur actiu','λυθήσ-ομαι, λυθήσ-ῃ, λυθήσ-εται…'],
+['Quin és el futur actiu de πέμπω?','πέμψω','πέμπσω','πέμξω','πέμσω','Labial + σ → ψ.'],
+['Quin és el futur actiu de ἄγω?','ἄξω','ἄγσω','ἄψω','ἄσω','Gutural + σ → ξ.'],
+['Quin és el futur actiu de πείθω?','πείσω','πείθσω','πείξω','πείψω','La dental cau davant σ.'],
+['Quin és el futur actiu de φυλάττω (arrel φυλακ-)?','φυλάξω','φυλάττσω','φυλάσω','φυλάψω','Els presents en -ττω solen amagar una arrel gutural: κ + σ → ξ.'],
+['πέμπω → πεμφθήσομαι: què li passa a la π?','Davant de θ s’aspira: π + θ → φθ','Cau','Es converteix en ψ','No canvia','Labial + θ → φθ.'],
+['ἄγω → ἀχθήσομαι: què li passa a la γ?','Davant de θ s’aspira: γ + θ → χθ','Cau','Es converteix en ξ','Es converteix en ψ','Gutural + θ → χθ.'],
+['πείθω → πεισθήσομαι: què passa amb la θ de l’arrel?','Dental + θ → σθ','Cau sense deixar rastre','θ + θ → φθ','No canvia','Dental + θ → σθ.'],
+['Com segmentaries λυθήσεσθε?','λυ- (arrel) · -θησ- (morfema temporal) · -ε-σθε (vocal + desinència)','λυθ- · -ησ- · -εσθε','λυ- · -θη- · -σεσθε','λυθησ- · -ε- · -σθε','2a pl. futur ind. passiu.'],
+['Quina és la 3a sg. del futur de εἰμί?','ἔσται','ἔσεται','ἐστί(ν)','ἔσει','Excepció: sense vocal temàtica.'],
+['Quina diferència hi ha entre λύσει i λύσῃ?','λύσει: 3a sg. fut. actiu · λύσῃ: 2a sg. fut. mitjà','Són la mateixa forma','λύσει és present','λύσῃ és passiu','Fixa’t en la desinència: -ει (actiu) / -ῃ (mitjà).']]
+};
+
+/* ================= GENERADORS ================= */
+const pick=a=>a[Math.floor(Math.random()*a.length)];
+const shuffle=a=>{a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a};
+function mkQ(tag,prompt,correct,pools,expl){
+  const ds=[];
+  for(const p of pools){for(const x of shuffle([...new Set(p)])){if(ds.length>=3)break;if(x&&x!==correct&&!ds.includes(x))ds.push(x)}}
+  if(ds.length<3)return null;
+  const opts=shuffle([correct,...ds]);
+  return {tag,prompt,opts,ans:opts.indexOf(correct),expl};
+}
+const G=s=>`<span class="gr">${s}</span>`;
+
+function tNoun(n,hl){
+  let h='<div class="scroll"><table class="par"><thead><tr><th></th><th>Singular</th><th>Plural</th></tr></thead><tbody>';
+  CASES.forEach(c=>{h+=`<tr><th>${c}</th>`+NUMS.map(nm=>{const k=c+' '+nm;return `<td class="gr${hl.includes(k)?' hl':''}"><span class="art">${ART[n.g][k]}</span>${n.f[k]}</td>`}).join('')+'</tr>'});
+  return h+'</tbody></table></div>';
+}
+const adjGs=a=>a.two?['m','n']:['m','f','n'];
+function tAdj(a,hl){
+  const gs=adjGs(a),lab=a.two?['m./f.','n.']:['m.','f.','n.'];
+  let h=`<div class="scroll"><table class="par"><thead><tr><th></th>${lab.map(l=>`<th>${l}</th>`).join('')}</tr></thead><tbody>`;
+  NUMS.forEach(nm=>{h+=`<tr class="sub"><th colspan="${gs.length+1}">${NN[nm]}</th></tr>`;
+    CASES.forEach(c=>{h+=`<tr><th>${c}</th>`+gs.map(g=>{const k=g+' '+c+' '+nm;const on=hl.includes(k)||(a.two&&g==='m'&&hl.includes('f '+c+' '+nm));return `<td class="gr${on?' hl':''}">${a.f[k]}</td>`}).join('')+'</tr>'})});
+  return h+'</tbody></table></div>';
+}
+function tVerb(v,tvs,hl){
+  tvs=tvs.filter(t=>v.f[t]);
+  let h=`<div class="scroll"><table class="par"><thead><tr><th></th>${tvs.map(t=>`<th>${TVN[t].replace(' ind.','')}</th>`).join('')}</tr></thead><tbody>`;
+  PERS.forEach((p,i)=>{h+=`<tr><th>${p}</th>`+tvs.map(t=>`<td class="gr${hl.includes(t+' '+i)?' hl':''}">${v.f[t][i]}</td>`).join('')+'</tr>'});
+  return h+'</tbody></table></div>';
+}
+const notes=a=>a.filter(Boolean).map(x=>`<p class="note">${x}</p>`).join('');
+function nounNotes(n){return [n.note,PH[n.t],n.root?`Arrel: ${G(n.root)} (del genitiu ${G(n.gen)}).`:null]}
+
+function fmtNoun(ks){
+  return NUMS.map(nm=>{const cs=CASES.filter(c=>ks.includes(c+' '+nm));return cs.length?`${cs.map(c=>CA[c]).join(', ')} ${nm}.`:null}).filter(Boolean).join(' / ');
+}
+const ALLNOUNLAB=[];CASES.forEach(c=>NUMS.forEach(nm=>ALLNOUNLAB.push(`${CA[c]} ${nm}.`)));
+const tagOf=n=>({d12:'1a i 2a declinació',ocl:'3a decl. · oclusiva',nas:'3a decl. · nasal'})[n.sec];
+
+function qNounForm(n){
+  const keys=Object.keys(n.f).filter(k=>!k.startsWith('V')||Math.random()<.25);
+  const k=pick(keys),[c,nm]=k.split(' '),cor=n.f[k];
+  const near=[n.f[c+' '+(nm==='sg'?'pl':'sg')],...CASES.map(x=>n.f[x+' '+nm])];
+  return mkQ(tagOf(n),`Quina és la forma de <b>${CF[c]} ${NN[nm]}</b> de ${G(n.enunc)} <i>‘${n.cat}’</i>?`,cor,[(n.trap&&n.trap[k])||[],near,Object.values(n.f)],
+    notes(nounNotes(n))+tNoun(n,[k]));
+}
+function qNounAnalyze(n){
+  const form=n.f[pick(Object.keys(n.f))];
+  const ks=Object.keys(n.f).filter(k=>n.f[k]===form),cor=fmtNoun(ks);
+  const other=[...new Set(Object.values(n.f))].map(f=>fmtNoun(Object.keys(n.f).filter(k=>n.f[k]===f)));
+  return mkQ(tagOf(n),`Analitza la forma:<span class="big gr">${form}</span><small>de ${G(n.enunc)} ‘${n.cat}’</small>`,cor,[other,ALLNOUNLAB],
+    notes([ks.length>1?'Aquesta forma pot ser més d’un cas: a l’examen cal indicar-los tots.':null,...nounNotes(n)])+tNoun(n,ks));
+}
+function qNounType(n){
+  if(n.noType)return null;
+  const fam=n.sec==='d12'?['p','x','e','as','es','o','of','on']:['g','l','d','n'];
+  return mkQ(tagOf(n),`Quina declinació i tema té ${G(n.enunc)} <i>‘${n.cat}’</i>?`,n.type,[fam.map(t=>T[t]),Object.values(T)],
+    notes([n.root?`Mira el genitiu: ${G(n.gen)} → arrel ${G(n.root)}.`:null,PH[n.t]])+tNoun(n,[]));
+}
+function qNounRoot(n){
+  return mkQ(tagOf(n),`Quina és l’arrel de ${G(n.enunc)} <i>‘${n.cat}’</i>?`,n.root,[n.fakeRoot],
+    notes([`L’arrel s’obté del genitiu singular traient -ος: ${G(n.gen)} → ${G(n.root)}.`,PH[n.t]]));
+}
+function qNounEnunc(n){
+  return mkQ(tagOf(n),`L’arrel és ${G(n.root)} (${n.art}) <i>‘${n.cat}’</i>. Quin és l’enunciat correcte?`,`${n.lemma}, ${n.gen}`,[n.fake],
+    notes([n.note||PH[n.t]])+tNoun(n,['N sg','G sg']));
+}
+function fmtAdj(a,ks){
+  const gs=adjGs(a),map={};
+  ks.forEach(k=>{let [g,c,nm]=k.split(' ');if(a.two&&g==='f')g='m';(map[c+' '+nm]=map[c+' '+nm]||new Set()).add(g)});
+  const gl=s=>{const l=gs.filter(g=>s.has(g)).map(g=>a.two&&g==='m'?'m./f.':g+'.');return l.length===gs.length?(a.two?'m., f. i n.':'m., f. i n.'):l.join(' i ')};
+  const groups={};
+  NUMS.forEach(nm=>CASES.forEach(c=>{const s=map[c+' '+nm];if(!s)return;const key=nm+'|'+gl(s);(groups[key]=groups[key]||[]).push(c)}));
+  return Object.entries(groups).map(([k,cs])=>{const [nm,g]=k.split('|');return `${cs.map(c=>CA[c]).join(', ')} ${nm}. ${g}`}).join(' / ');
+}
+const tagA=a=>a.sec==='adj'?'Adjectius 2-1-2 i 2-2':'Adjectius 3-1-3 i 3-3 (nasal)';
+function qAdjForm(a){
+  const g=pick(adjGs(a)),c=Math.random()<.15?'V':pick(['N','A','G','D']),nm=pick(NUMS),k=g+' '+c+' '+nm,cor=a.f[k];
+  const gname=a.two&&g==='m'?'masculí/femení':GN[g];
+  const near=['m','f','n'].map(x=>a.f[x+' '+c+' '+nm]).concat(CASES.map(x=>a.f[g+' '+x+' '+nm]));
+  return mkQ(tagA(a),`Quina és la forma de <b>${CF[c]} ${NN[nm]} ${gname}</b> de ${G(a.enunc)} <i>‘${a.cat}’</i>?`,cor,[near,Object.values(a.f)],
+    notes([a.note])+tAdj(a,[k]));
+}
+function qAdjAnalyze(a){
+  const keys=Object.keys(a.f).filter(k=>!(a.two&&k[0]==='f'));
+  const form=a.f[pick(keys)],ks=keys.filter(k=>a.f[k]===form),cor=fmtAdj(a,ks);
+  const other=[...new Set(keys.map(k=>a.f[k]))].map(f=>fmtAdj(a,keys.filter(k=>a.f[k]===f)));
+  return mkQ(tagA(a),`Analitza la forma:<span class="big gr">${form}</span><small>de ${G(a.enunc)} ‘${a.cat}’</small>`,cor,[other],
+    notes([ks.length>1?'Forma ambigua: indica totes les possibilitats.':null,a.note])+tAdj(a,ks));
+}
+function qAdjType(a){
+  return mkQ(tagA(a),`Quin tipus d’adjectiu és ${G(a.enunc)} <i>‘${a.cat}’</i>?`,TY[a.type],[Object.values(TY)],notes([a.note])+tAdj(a,[]));
+}
+function qAgree(a,nouns){
+  const n=pick(nouns),c=pick(['N','A','G','D']),nm=pick(NUMS),g=n.g;
+  const nf=n.f[c+' '+nm],art=ART[g][c+' '+nm],k=g+' '+c+' '+nm,cor=a.f[k];
+  const near=['m','f','n'].map(x=>a.f[x+' '+c+' '+nm]).concat(CASES.map(x=>a.f[g+' '+x+' '+nm]));
+  return mkQ(tagA(a),`Completa amb la forma de ${G(a.enunc)} <i>‘${a.cat}’</i> que concorda:<span class="big gr">${art} ___ ${nf}</span><small>${G(n.enunc)} ‘${n.cat}’</small>`,cor,[near,Object.values(a.f)],
+    notes([`${G(art+' '+cor+' '+nf)}: ${CF[c]} ${NN[nm]} ${GN[g]}.`,'L’adjectiu concorda en gènere, nombre i cas amb el substantiu, però la terminació no ha de ser per força la mateixa.'])+tAdj(a,[k]));
+}
+const tagV=tvs=>tvs.includes('fa')||tvs.includes('fp')?'Futur actiu, mitjà i passiu':'Present actiu i mitjà-passiu';
+function qVerbAnalyze(v,tvs,all){
+  const av=tvs.filter(t=>v.f[t]);if(!av.length)return null;
+  const tv=pick(av),p=Math.floor(Math.random()*6),form=v.f[tv][p],cor=`${PERS[p]} ${TVN[tv]}`;
+  const avAll=all.filter(t=>v.f[t]);
+  const sameTv=PERS.map((x,i)=>`${x} ${TVN[tv]}`),samePer=avAll.map(t=>`${PERS[p]} ${TVN[t]}`),rest=Object.keys(TVN).flatMap(t=>PERS.map(x=>`${x} ${TVN[t]}`));
+  return mkQ(tagV(tvs),`Analitza la forma verbal:<span class="big gr">${form}</span><small>de ${G(v.lemma)} ‘${v.cat}’</small>`,cor,[samePer,sameTv,all.includes('fa')?rest:[]],
+    notes([TVNOTE[tv],v.note])+tVerb(v,avAll,[tv+' '+p]));
+}
+function qVerbForm(v,tvs){
+  const av=tvs.filter(t=>v.f[t]);if(!av.length)return null;
+  const tv=pick(av),p=Math.floor(Math.random()*6),cor=v.f[tv][p];
+  let traps=[];
+  if(tv==='fa')traps=v.trapF.map(s=>act(s)[p]);
+  if(tv==='fm')traps=v.trapF.map(s=>mp(s)[p]);
+  if(tv==='fp'){traps=v.trapP.map(s=>mp(s)[p]);if(v.fpas)traps.push(act(v.fpas)[p])}
+  const near=Object.keys(v.f).map(t=>v.f[t][p]);
+  return mkQ(tagV(tvs),`Quina és la <b>${PERS[p]} del ${TVN[tv]}</b> de ${G(v.lemma)} <i>‘${v.cat}’</i>?`,cor,[traps,near,v.f[tv]],
+    notes([TVNOTE[tv],v.note])+tVerb(v,Object.keys(v.f),[tv+' '+p]));
+}
+const SECNAME={d12:'1a i 2a declinació',ocl:'3a decl. · oclusiva',nas:'3a decl. · nasal',adj:'Adjectius 2-1-2 i 2-2',adjn:'Adjectius 3-1-3 i 3-3 (nasal)',pres:'Present actiu i mitjà-passiu',fut:'Futur actiu, mitjà i passiu'};
+function qStatic(id){
+  const s=pick(ST[id]);
+  return mkQ(SECNAME[id]+' · teoria',s[0],s[1],[s.slice(2,5)],notes([s[5]]));
+}
+
+const byS=s=>NOUNS.filter(n=>n.sec===s);
+const N12=byS('d12'),NOC=byS('ocl'),NNA=byS('nas'),N3=NOC.concat(NNA);
+const A12=ADJS.filter(a=>a.sec==='adj'),AN=ADJS.filter(a=>a.sec==='adjn');
+const VF=VERBS.filter(v=>v.f.fa||v.f.fm);
+const PR=['pa','pm'],FU=['fa','fm','fp'],ALLTV=['pa','pm','fa','fm','fp'];
+
+const GENS={
+d12:[[3,()=>qNounForm(pick(N12))],[3,()=>qNounAnalyze(pick(N12))],[1.5,()=>qNounType(pick(N12))],[1.5,()=>qStatic('d12')]],
+ocl:[[3,()=>qNounForm(pick(NOC))],[3,()=>qNounAnalyze(pick(NOC))],[2,()=>qNounEnunc(pick(NOC))],[1,()=>qNounRoot(pick(NOC))],[1.2,()=>qNounType(pick(NOC))],[2.5,()=>qStatic('ocl')]],
+nas:[[3,()=>qNounForm(pick(NNA))],[3,()=>qNounAnalyze(pick(NNA))],[1.5,()=>qNounEnunc(pick(NNA))],[1,()=>qNounRoot(pick(NNA))],[1,()=>qNounType(pick(N3))],[2.5,()=>qStatic('nas')]],
+adj:[[3,()=>qAdjForm(pick(A12))],[2,()=>qAdjAnalyze(pick(A12))],[1,()=>qAdjType(pick(ADJS))],[2.5,()=>qAgree(pick(A12),N12.concat(N3))],[1,()=>qStatic('adj')]],
+adjn:[[3,()=>qAdjForm(pick(AN))],[3,()=>qAdjAnalyze(pick(AN))],[1.2,()=>qAdjType(pick(ADJS))],[3,()=>qAgree(pick(AN),N3.concat(N12))],[2,()=>qStatic('adjn')]],
+pres:[[3.5,()=>qVerbAnalyze(pick(VERBS),PR,PR)],[3,()=>qVerbForm(pick(VERBS),PR)],[1.5,()=>qStatic('pres')]],
+fut:[[3.5,()=>qVerbAnalyze(pick(VF),FU,ALLTV)],[3,()=>qVerbForm(pick(VF),FU)],[2.5,()=>qStatic('fut')]]
+};
+const MIXW={d12:1,ocl:3,nas:2.5,adj:1,adjn:2.5,pres:1,fut:2};
+const wpick=list=>{let t=list.reduce((s,x)=>s+x[0],0),r=Math.random()*t;for(const x of list){if((r-=x[0])<=0)return x[1]}return list[list.length-1][1]};
+function build(id,n){
+  const out=[],seen=new Set();let tries=0;
+  while(out.length<n&&tries++<600){
+    const sid=id==='mix'?wpick(Object.entries(MIXW).map(([k,w])=>[w,k])):id;
+    const q=wpick(GENS[sid])();
+    if(q&&!seen.has(q.prompt)){seen.add(q.prompt);out.push(q)}
+  }
+  return out;
+}
+
+const SECTIONS=[
+{id:'ocl',name:'3a declinació: oclusiva',d:'Gutural, labial i dental: arrels, enunciats, nominatiu i datiu plural.',n:15,nou:1},
+{id:'nas',name:'3a declinació: nasal',d:'δαίμων, ποιμήν, ἀγών, Ἕλλην… allargaments i caiguda de la ν.',n:12,nou:1},
+{id:'adjn',name:'Adjectius nasals 3-1-3 i 3-3',d:'μέλας, μέλαινα, μέλαν · εὐδαίμων, -ον. Formes i concordança.',n:15,nou:1},
+{id:'adj',name:'Adjectius 2-1-2 i 2-2',d:'καλός, δίκαιος, μικρός · ἀθάνατος, ἄδικος.',n:12},
+{id:'d12',name:'1a i 2a declinació',d:'α pura i mixta, -η, masculins en -ας/-ης, 2a declinació.',n:12},
+{id:'pres',name:'Present actiu i mitjà-passiu',d:'λύω, παιδεύω, ἄγω, ἔχω, εἰμί…',n:12},
+{id:'fut',name:'Futur actiu, mitjà i passiu',d:'Morfemes -σ- i -θησ-, canvis fonètics (ψ, ξ, φθ, χθ, σθ).',n:15,nou:0}
+];
+
+/* ================= INTERFÍCIE ================= */
+if(typeof document!=='undefined'){
+const app=document.getElementById('app');
+const store={get(k){try{return JSON.parse(localStorage.getItem('grec1q:'+k))}catch(e){return null}},set(k,v){try{localStorage.setItem('grec1q:'+k,JSON.stringify(v))}catch(e){}}};
+const OKW=['Ben fet!','Exacte!','Perfecte!','Molt bé!','Correcte!'],BADW=['No exactament.','Gairebé…','Compte!','Repassa-ho.'];
+let S=null;
+
+function card(s,big){
+  const best=store.get('best:'+s.id);
+  return `<button class="sec${big?' big':''}" data-go="${s.id}"><h3>${s.name}</h3><span class="d">${s.d}</span>
+  <span class="meta">${s.nou?'<span class="badge">Novetat del tema</span>':''}<span>${s.n} preguntes</span>${best!=null?`<span>· millor: ${best}%</span>`:''}</span></button>`;
+}
+function home(){
+  S=null;
+  app.innerHTML=`<h2 style="margin-top:0">Novetats del tema</h2><div class="grid">${SECTIONS.filter(s=>s.nou).map(s=>card(s)).join('')}</div>
+  <h2>Repàs</h2><div class="grid">${SECTIONS.filter(s=>!s.nou).map(s=>card(s)).join('')}</div>
+  <h2>Per acabar</h2><div class="grid">${card({id:'mix',name:'Examen mixt',d:'De tot una mica, amb més pes per a la 3a declinació i els adjectius nasals.',n:20},1)}
+  <button class="sec big" data-go="taules"><h3>Completa la taula</h3><span class="d">Tria una paraula o un verb i omple tot el paradigma amb els desplegables.</span><span class="meta"><span>Mode lliure</span></span></button></div>`;
+  window.scrollTo(0,0);
+}
+function start(id,qs){
+  const sec=SECTIONS.find(s=>s.id===id)||{id:'mix',name:'Examen mixt',n:20};
+  S={id,name:sec.name,qs:qs||build(id,sec.n),i:0,score:0,wrong:[],done:false};
+  showQ();
+}
+function showQ(){
+  const q=S.qs[S.i];S.done=false;
+  app.innerHTML=`<div class="top"><button class="btn" data-go="home">← Inici</button><div class="bar"><i style="width:${S.i/S.qs.length*100}%"></i></div><span class="count">${S.i+1} / ${S.qs.length} · ${S.score} encerts</span></div>
+  <div class="qcard"><div class="qtag">${q.tag}</div><div class="prompt">${q.prompt}</div>
+  <div class="opts">${q.opts.map((o,i)=>`<button class="opt${/[a-zà-úç]/i.test(o.replace(/<[^>]+>/g,''))?'':' gr'}" data-o="${i}"><span class="k">${i+1}</span><span>${o}</span></button>`).join('')}</div>
+  <div class="fb" id="fb"></div><div class="next" id="nx"></div></div>`;
+  app.querySelector('.opt').focus({preventScroll:true});
+}
+function answer(i){
+  if(!S||S.done)return;S.done=true;
+  const q=S.qs[S.i],ok=i===q.ans,bs=app.querySelectorAll('.opt');
+  bs.forEach((b,j)=>{b.disabled=true;if(j===q.ans)b.classList.add('ok');else if(j===i)b.classList.add('bad')});
+  if(ok)S.score++;else S.wrong.push(q);
+  const fb=document.getElementById('fb');
+  fb.innerHTML=`<b class="v ${ok?'ok':'bad'}">${ok?pick(OKW):pick(BADW)+' La resposta correcta és: '+q.opts[q.ans]}</b>${q.expl}`;
+  fb.classList.add('on');
+  const last=S.i===S.qs.length-1;
+  document.getElementById('nx').innerHTML=`<button class="btn pri" id="go">${last?'Veure resultat':'Següent →'}</button>`;
+  document.getElementById('go').focus({preventScroll:true});
+}
+function next(){if(!S)return;if(S.i<S.qs.length-1){S.i++;showQ();window.scrollTo(0,0)}else result()}
+function result(){
+  const pc=Math.round(S.score/S.qs.length*100);
+  if(S.id!=='retry'){const b=store.get('best:'+S.id);if(b==null||pc>b)store.set('best:'+S.id,pc)}
+  const msg=pc>=90?'Excel·lent! Domines aquest bloc.':pc>=70?'Molt bé! Repassa els errors i ho tindràs.':pc>=50?'Vas bé, però convé repassar els paradigmes.':'Torna a mirar els paradigmes i prova una altra ronda.';
+  app.innerHTML=`<div class="top"><button class="btn" data-go="home">← Inici</button></div><div class="qcard res">
+  <div class="qtag">${S.name}</div><div class="score">${S.score} / ${S.qs.length}</div><p>${pc}% · ${msg}</p>
+  <div class="row">${S.wrong.length?'<button class="btn pri" data-go="retry">Repeteix els errors</button>':''}<button class="btn${S.wrong.length?'':' pri'}" data-go="again">Nova ronda</button><button class="btn" data-go="home">Altres blocs</button></div>
+  ${S.wrong.length?`<div class="rev"><h3>Errors</h3><ol>${S.wrong.map(q=>`<li>${q.prompt.replace(/<span class="big gr">/,' <span class="gr"><b>').replace(/<\/span><small>/,'</b></span> <small>')} → <b>${q.opts[q.ans]}</b></li>`).join('')}</ol></div>`:''}</div>`;
+  window.scrollTo(0,0);
+}
+
+/* ---- mode taula ---- */
+function tablesView(sel){
+  const items=[...NOUNS.map((n,i)=>({k:'n'+i,l:n.enunc,g:tagOf(n)})),...ADJS.map((a,i)=>({k:'a'+i,l:a.enunc,g:tagA(a)})),...VERBS.map((v,i)=>({k:'v'+i,l:v.lemma,g:'Verbs'}))];
+  sel=sel||'n'+NOUNS.indexOf(NOC[0]);
+  const groups=[...new Set(items.map(x=>x.g))];
+  app.innerHTML=`<div class="top"><button class="btn" data-go="home">← Inici</button><select id="tsel" class="gr" aria-label="Paraula">${groups.map(g=>`<optgroup label="${g}">${items.filter(x=>x.g===g).map(x=>`<option value="${x.k}"${x.k===sel?' selected':''}>${x.l}</option>`).join('')}</optgroup>`).join('')}</select></div>
+  <div class="qcard"><p class="hint">Tria la forma correcta a cada casella i prem «Comprova».</p><div id="tb"></div>
+  <div class="row"><button class="btn pri" id="chk">Comprova</button><button class="btn" id="sol">Mostra la solució</button><button class="btn" id="rst">Torna a començar</button></div><p id="tres" class="hint" style="text-align:center"></p></div>`;
+  renderTable(sel);
+}
+let TB=null;
+function selCell(id,ans,opts){return `<select class="gr" data-a="${ans}" id="${id}"><option value="">—</option>${opts.map(o=>`<option>${o}</option>`).join('')}</select>`}
+function renderTable(k){
+  const t=k[0],i=+k.slice(1);let h='';
+  if(t==='n'){const n=NOUNS[i];
+    const col=nm=>shuffle([...new Set(CASES.map(c=>n.f[c+' '+nm]).concat(Object.entries(n.trap||{}).filter(([kk])=>kk.endsWith(nm)).flatMap(x=>x[1])))]);
+    const o={sg:col('sg'),pl:col('pl')};
+    h=`<p>${G(n.enunc)} ‘${n.cat}’</p><div class="scroll"><table class="par tbl"><tr><th></th><th>Singular</th><th>Plural</th></tr>${CASES.map(c=>`<tr><th>${c}</th>${NUMS.map(nm=>`<td>${selCell('c'+c+nm,n.f[c+' '+nm],o[nm])}</td>`).join('')}</tr>`).join('')}</table></div>`;
+  }else if(t==='a'){const a=ADJS[i],gs=adjGs(a),lab=a.two?['m./f.','n.']:['m.','f.','n.'];
+    const o={};gs.forEach(g=>o[g]=shuffle([...new Set(Object.keys(a.f).filter(x=>x[0]===g).map(x=>a.f[x]))]));
+    h=`<p>${G(a.enunc)} ‘${a.cat}’</p><div class="scroll"><table class="par tbl"><tr><th></th>${lab.map(l=>`<th>${l}</th>`).join('')}</tr>${NUMS.map(nm=>`<tr class="sub"><th colspan="${gs.length+1}">${NN[nm]}</th></tr>`+CASES.map(c=>`<tr><th>${c}</th>${gs.map(g=>`<td>${selCell('c'+g+c+nm,a.f[g+' '+c+' '+nm],o[g])}</td>`).join('')}</tr>`).join('')).join('')}</table></div>`;
+  }else{const v=VERBS[i],tvs=ALLTV.filter(x=>v.f[x]);
+    h=`<p>${G(v.lemma)} ‘${v.cat}’</p><div class="scroll"><table class="par tbl"><tr><th></th>${tvs.map(x=>`<th>${TVN[x].replace(' ind.','')}</th>`).join('')}</tr>${PERS.map((p,j)=>`<tr><th>${p}</th>${tvs.map(x=>`<td>${selCell('c'+x+j,v.f[x][j],shuffle(v.f[x]))}</td>`).join('')}</tr>`).join('')}</table></div>`;
+  }
+  document.getElementById('tb').innerHTML=h;document.getElementById('tres').textContent='';TB=k;
+}
+function checkTable(show){
+  const ss=[...document.querySelectorAll('#tb select')];let ok=0;
+  ss.forEach(s=>{if(show)s.value=s.dataset.a;const good=s.value===s.dataset.a;s.classList.toggle('ok',good);s.classList.toggle('bad',!good&&s.value!=='');if(good)ok++});
+  document.getElementById('tres').textContent=show?'Solució mostrada.':`${ok} de ${ss.length} caselles correctes${ok===ss.length?' · Perfecte!':''}`;
+}
+
+app.addEventListener('click',e=>{
+  const o=e.target.closest('.opt');if(o){answer(+o.dataset.o);return}
+  if(e.target.closest('#go')){next();return}
+  if(e.target.id==='chk'){checkTable(false);return}
+  if(e.target.id==='sol'){checkTable(true);return}
+  if(e.target.id==='rst'){renderTable(TB);return}
+  const g=e.target.closest('[data-go]');if(!g)return;const id=g.dataset.go;
+  if(id==='home')home();
+  else if(id==='taules')tablesView();
+  else if(id==='retry'){const w=shuffle(S.wrong).map(q=>{const opts=shuffle(q.opts),c=q.opts[q.ans];return {...q,opts,ans:opts.indexOf(c)}});const nm=S.name;S={id:'retry',name:nm+' · errors',qs:w,i:0,score:0,wrong:[]};showQ()}
+  else if(id==='again')start(S.id==='retry'?'mix':S.id);
+  else start(id);
+});
+app.addEventListener('change',e=>{if(e.target.id==='tsel')renderTable(e.target.value)});
+document.addEventListener('keydown',e=>{
+  if(!S||!document.querySelector('.opts'))return;
+  if(!S.done&&/^[1-4]$/.test(e.key))answer(+e.key-1);
+  else if(S.done&&(e.key==='Enter'||e.key==='ArrowRight')&&document.activeElement.id!=='go'){e.preventDefault();next()}
+});
+home();
+}
+globalThis.__T={build,SECTIONS,NOUNS,ADJS,VERBS};
+}
+</script>
+</body>
+</html>
